@@ -70,13 +70,13 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 					$mysql_webui_user = $_POST['mysql_webui_user'];
 					$mysql_webui_passwd = $_POST['mysql_webui_passwd'];
 					$local_ip = $_SERVER['SERVER_ADDR'];
-					$db_handler = mysql_connect($mysql_host,$mysql_admin,$mysql_passwd);
-					mysql_select_db($mysql_database, $db_handler);
-					$mysql_webui_create = mysql_query("GRANT ALL PRIVILEGES ON $mysql_database.* TO '$mysql_webui_user'@'$local_ip' IDENTIFIED BY '$mysql_webui_passwd';");
+					$db_handler = mysqli_connect($mysql_host,$mysql_admin,$mysql_passwd);
+					mysqli_select_db($db_handler, $mysql_database);
+					$mysql_webui_create = mysqli_query($db_handler, "GRANT ALL PRIVILEGES ON $mysql_database.* TO '$mysql_webui_user'@'$local_ip' IDENTIFIED BY '$mysql_webui_passwd';");
 					if (!$mysql_webui_create) {
 						echo("<p class=\"info\" align=\"left\">ERROR: Can not create user $mysql_webui_user.</p>\n");
 					}
-					$mysql_webui_create2 = mysql_query("GRANT ALL PRIVILEGES ON $mysql_database.* TO '$mysql_webui_user'@'$mysql_host' IDENTIFIED BY '$mysql_webui_passwd';");
+					$mysql_webui_create2 = mysqli_query($db_handler, "GRANT ALL PRIVILEGES ON $mysql_database.* TO '$mysql_webui_user'@'$mysql_host' IDENTIFIED BY '$mysql_webui_passwd';");
 					if (!$mysql_webui_create2) {
 						echo("<p class=\"info\" align=\"left\">ERROR: Can not create user $mysql_webui_user.</p>\n");
 					}
@@ -87,7 +87,7 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 					$mysql_admin = $_POST['mysql_admin'];
 					$mysql_passwd = $_POST['mysql_passwd'];
 					$mysql_database = $_POST['mysql_database'];
-					$db_handler = mysql_connect($mysql_host,$mysql_admin,$mysql_passwd);
+					$db_handler = mysqli_connect($mysql_host,$mysql_admin,$mysql_passwd);
 					$ftp_users_table = "CREATE TABLE `ftpd` (
 										  `id` int(11) NOT NULL AUTO_INCREMENT,
 										  `User` varchar(16) NOT NULL DEFAULT '',
@@ -106,8 +106,8 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 										  KEY `id` (`id`)
 										) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;";
 					$users_table_create = FALSE;
-					mysql_select_db($mysql_database,$db_handler);
-					$users_table_create = mysql_query($ftp_users_table,$db_handler);
+					mysqli_select_db($db_handler, $mysql_database);
+					$users_table_create = mysqli_query($db_handler, $ftp_users_table);
 					if (!$users_table_create) {
 						echo("<p class=\"error\" align=\"left\">ERROR: Can not create users table for Pure-FTPd.</p>\n");
 					}
@@ -121,15 +121,15 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 					$mysql_admin = $_POST['mysql_admin'];
 					$mysql_passwd = $_POST['mysql_passwd'];
 					$mysql_database = $_POST['mysql_database'];
-					$db_handler = mysql_connect($mysql_host,$mysql_admin,$mysql_passwd);
+					$db_handler = mysqli_connect($mysql_host,$mysql_admin,$mysql_passwd);
 					$settings_table = "CREATE TABLE `settings` (
 														  `name` varchar(50) NOT NULL DEFAULT '',
 														  `value` varchar(255) NOT NULL DEFAULT '',
 														  PRIMARY KEY (`name`)
 														) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 					$settings_table_create = FALSE;
-					mysql_select_db($mysql_database, $db_handler);
-					$settings_table_create = mysql_query($settings_table,$db_handler);
+					mysqli_select_db($db_handler, $mysql_database);
+					$settings_table_create = mysqli_query($db_handler, $settings_table);
 					if (!$settings_table_create) {
 						echo("<p class=\"error\" align=\"left\">ERROR: Can not create settings table for Pure-FTPd WebUI.</p>\n");
 					}
@@ -146,8 +146,8 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 															('pureftpd_conf_path','/etc/pure-ftpd/pure-ftpd.conf'),
 															('pureftpd_init_script_path','/etc/init.d/pure-ftpd');";
 						$settings_table_content_create = FALSE;
-						mysql_select_db($mysql_database, $db_handler);
-						$settings_table_content_create = mysql_query($settings_table_content,$db_handler);
+						mysqli_select_db($db_handler, $mysql_database);
+						$settings_table_content_create = mysqli_query($db_handler, $settings_table_content);
 						if (!$settings_table_create) {
 							echo("<p class=\"error\" align=\"left\">ERROR: Can not create content of settings table for Pure-FTPd WebUI.</p>\n");
 						}
@@ -162,7 +162,7 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 					$mysql_admin = $_POST['mysql_admin'];
 					$mysql_passwd = $_POST['mysql_passwd'];
 					$mysql_database = $_POST['mysql_database'];
-					$db_handler = mysql_connect($mysql_host,$mysql_admin,$mysql_passwd);
+					$db_handler = mysqli_connect($mysql_host,$mysql_admin,$mysql_passwd);
 					$webui_users_table = "CREATE TABLE `userlist` (
 										  `id` int(3) NOT NULL AUTO_INCREMENT,
 										  `user` varchar(50) COLLATE utf8_bin NOT NULL,
@@ -171,8 +171,8 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 										  PRIMARY KEY (`id`)
 										) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 					$webui_table_create = FALSE;
-					mysql_select_db($mysql_database, $db_handler);
-					$webui_table_create = mysql_query($webui_users_table,$db_handler);
+					mysqli_select_db($db_handler, $mysql_database);
+					$webui_table_create = mysqli_query($db_handler, $webui_users_table);
 					if (!$webui_table_create) {
 						echo("<p class=\"error\" align=\"left\">ERROR: Can not create users table for Pure-FTPd WebUI.</p>\n");
 					}
@@ -186,9 +186,9 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 					$mysql_admin = $_POST['mysql_admin'];
 					$mysql_passwd = $_POST['mysql_passwd'];
 					$mysql_database = $_POST['mysql_database'];
-					$db_handler = mysql_connect($mysql_host,$mysql_admin,$mysql_passwd);
+					$db_handler = mysqli_connect($mysql_host,$mysql_admin,$mysql_passwd);
 					$db_create = FALSE;
-					$db_create = mysql_query("CREATE DATABASE $mysql_database",$db_handler);
+					$db_create = mysqli_query($db_handler, "CREATE DATABASE $mysql_database");
 					if (!$db_create) {
 						echo("<p class=\"error\" align=\"left\">ERROR: Can not create database. Maybe you don't have permissions to create database.</p>\n");
 					}
@@ -217,7 +217,7 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 				$mysql_passwd = $_POST['mysql_passwd'];
 				$mysql_database = $_POST['mysql_database'];
 				$db_handler = FALSE;
-				$db_handler = mysql_connect($mysql_host,$mysql_admin,$mysql_passwd);
+				$db_handler = mysqli_connect($mysql_host,$mysql_admin,$mysql_passwd);
 
 				if (!$db_handler) {
 					echo("<p class=\"error\" align=\"left\">ERROR: Can not connect to MySQL server.</p>\n");
@@ -225,9 +225,9 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 
 				if (isset ($mysql_database) && $mysql_database != '') {
 					$db_con = FALSE;
-					$db_con = mysql_select_db($mysql_database, $db_handler);
+					$db_con = mysqli_select_db($db_handler, $mysql_database);
 					if (!$db_con) {
-						if (($err = mysql_errno()) == 1049) {
+						if (($err = mysqli_errno($db_handler)) == 1049) {
 							create_database();
 							create_table_ftp();
 							create_table_settings();
@@ -239,7 +239,7 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 						echo("<p class=\"info\" align=\"left\">Using already existing database $mysql_database.</p>\n");
 						create_webui_user();
 						$test_ftp_table = "SELECT * FROM ftpd";
-						$result = mysql_query($test_ftp_table);
+						$result = mysqli_query($db_handler, $test_ftp_table);
 						if (!$result) {
 							create_webui_user();
 							create_table_ftp();
@@ -248,7 +248,7 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 							echo("<p class=\"info\" align=\"left\">Using already existing Pure-FTPd users table.</p><p class=\"warning\" align=\"left\">WARNING the structure of the table may be differ.</p>\n");
 						}
 						$test_settings_table = "SELECT * FROM settings";
-						$result = mysql_query($test_settings_table);
+						$result = mysqli_query($db_handler, $test_settings_table);
 						if (!$result) {
 							create_table_settings();
 						}
@@ -256,7 +256,7 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 							echo("<p class=\"info\" align=\"left\">Using already existing Pure-FTPd WebUI settings table.</p><p class=\"warning\" align=\"left\">WARNING the structure of the table may be differ.</p>\n");
 						}
 						$test_webui_table = "SELECT * FROM userlist";
-						$result = mysql_query($test_webui_table);
+						$result = mysqli_query($db_handler, $test_webui_table);
 						if (!$result) {
 							create_table_webui();
 						}
@@ -321,10 +321,10 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 				$webui_admin_passwd = $_POST['webui_admin_passwd'];
 				$webui_admin_language = $_POST['webui_admin_language'];
 				$db_handler = FALSE;
-				$db_handler = mysql_connect($mysql_host,$mysql_admin,$mysql_passwd);
-				$db_con = mysql_select_db($mysql_database, $db_handler);
+				$db_handler = mysqli_connect($mysql_host,$mysql_admin,$mysql_passwd);
+				$db_con = mysqli_select_db($db_handler, $mysql_database);
 				$add_user_queue = "INSERT INTO userlist (user,pass,language) VALUES ('$webui_admin',md5('$webui_admin_passwd'),'$webui_admin_language')";
-				$result = mysql_query($add_user_queue);
+				$result = mysqli_query($db_handler, $add_user_queue);
 				if ($result != FALSE) {
 					echo("<p class=\"info\" align=\"left\">The administrator account is added. </br> Pure-FTPd WebUI available <a href=\"/pure-ftpd-webui\">here</a>.</p>\n");
 				}

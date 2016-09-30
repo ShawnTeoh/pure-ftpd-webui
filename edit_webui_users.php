@@ -5,16 +5,16 @@ include ("blocks/db_connect.php"); /*Подлкючаемся к базе*/
 $user = $_SERVER['PHP_AUTH_USER'];
 $info = '';
 $get_user_language = FALSE;
-$get_user_language = mysql_query("SELECT language FROM userlist WHERE user='$user';");
+$get_user_language = mysqli_query($db, "SELECT language FROM userlist WHERE user='$user';");
 if (!$get_user_language) {
-	if (($err = mysql_errno()) == 1054) {
+	if (($err = mysqli_errno($db)) == 1054) {
 		$info = "<p align=\"center\" class=\"table_error\">Your version of Pure-FTPd WebUI users table is not currently supported by current version, please upgrade your database to use miltilanguage support.</p>";
 	}
 	$language = "english";
 	include("lang/english.php");
 }
 else {
-	$language_row = mysql_fetch_array ($get_user_language);
+	$language_row = mysqli_fetch_array ($get_user_language);
 	$language = $language_row['language'];
 	if ($language == '') {
 		$language = "english";
@@ -51,8 +51,8 @@ echo("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 				<?php
 					if (isset ($_POST['id']) && !isset($_POST['edit']) && !isset($_POST['delete'])) {
 						$id = $_POST['id'];
-                 		$result = mysql_query ("SELECT * FROM userlist WHERE id=$id");
-						$myrow = mysql_fetch_array ($result);
+                 		$result = mysqli_query ($db, "SELECT * FROM userlist WHERE id=$id");
+						$myrow = mysqli_fetch_array ($result);
 						echo("
 							<form name=\"form1\" method=\"post\" action=\"$PHP_SELF\">
 								<p>
@@ -89,13 +89,13 @@ echo("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 						if (isset ($_POST['user'])) {$user = $_POST['user']; if ($user == '') {unset ($user);}}
 						if (isset ($_POST['pass'])) {$pass = $_POST['pass']; if ($pass == '') {unset ($pass);}}
 						if (isset ($_POST['language'])) {$language = $_POST['language']; if ($language == '') {unset ($language);}}
-						$result = mysql_query ("SELECT * FROM userlist WHERE id=$id");
-						$array = mysql_fetch_array ($result);
+						$result = mysqli_query ($db, "SELECT * FROM userlist WHERE id=$id");
+						$array = mysqli_fetch_array ($result);
 						// Проверяем были ли внесены какие-то изменения
 						if (($user != $array[user]) || (isset ($pass)) || ($language != $array[language])) {
 							// Если изменено имя пользователя, вносим изменения в базу
 							if (($user != $array[user]) && isset ($id)) {
-								$result = mysql_query ("UPDATE userlist SET user='$user' WHERE id='$id'");
+								$result = mysqli_query ($db, "UPDATE userlist SET user='$user' WHERE id='$id'");
 								if ($result == 'true') {echo "<p><strong>$ewu_edit_loginok</strong></p>";}
 								else {echo "<p><strong>$ewu_edit_loginerror</strong></p>";}
 							}
@@ -103,14 +103,14 @@ echo("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 							if (isset ($pass)) { 
 								$pass = md5($pass);
 								if (($pass != $array[pass]) && isset ($id)) {
-									$result = mysql_query ("UPDATE userlist SET pass='$pass' WHERE id='$id'");
+									$result = mysqli_query ($db, "UPDATE userlist SET pass='$pass' WHERE id='$id'");
 									if ($result == 'true') {echo "<p><strong>$ewu_edit_passwdok</strong></p>";}
 									else {echo "<p><strong>$ewu_edit_passwderror</strong></p>";}
 								}
 							}
 							// Если изменён язык пользователя, вносим изменения в базу
 							if (($language != $array[language]) && isset ($id)) {
-								$result = mysql_query ("UPDATE userlist SET language='$language' WHERE id='$id'");
+								$result = mysqli_query ($db, "UPDATE userlist SET language='$language' WHERE id='$id'");
 								if ($result == 'true') {echo "<p><strong>$ewu_edit_languageok</strong></p>";}
 								else {echo "<p><strong>$ewu_edit_languageerror</strong></p>";}
 							}
@@ -128,7 +128,7 @@ echo("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 					elseif ($_POST['delete']) {
 						if (isset ($_POST['id'])) {
 							$id = $_POST['id'];
-							$result = mysql_query ("DELETE FROM userlist WHERE id='$id'");
+							$result = mysqli_query ($db, "DELETE FROM userlist WHERE id='$id'");
 							if ($result == 'true') {echo "<p>$ewu_del_resultok<p>";}
 							else {echo "<p>$ewu_del_resulterror</p>";}
 						}

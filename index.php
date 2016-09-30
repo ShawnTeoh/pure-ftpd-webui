@@ -6,16 +6,16 @@ $user = $_SERVER['PHP_AUTH_USER'];
 include ("blocks/db_connect.php");
 $info = '';
 $get_user_language = FALSE;
-$get_user_language = mysql_query("SELECT language FROM userlist WHERE user='$user';");
+$get_user_language = mysqli_query($db, "SELECT language FROM userlist WHERE user='$user';");
 if (!$get_user_language) {
-	if (($err = mysql_errno()) == 1054) {
+	if (($err = mysqli_errno($db)) == 1054) {
 		$info = "<p align=\"center\" class=\"table_error\">Your version of Pure-FTPd WebUI users table is not currently supported by current version, please upgrade your database to use miltilanguage support.</p>";
 	}
 	$language = "english";
 	include("lang/english.php");
 }
 else {
-	$language_row = mysql_fetch_array ($get_user_language);
+	$language_row = mysqli_fetch_array ($get_user_language);
 	$language = $language_row['language'];
 	if ($language == '') {
 		$language = "english";

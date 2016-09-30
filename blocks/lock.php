@@ -10,12 +10,12 @@ if (!isset($_SERVER['PHP_AUTH_USER']))
 
 else {
         if (!get_magic_quotes_gpc()) {
-                $_SERVER['PHP_AUTH_USER'] = mysql_escape_string($_SERVER['PHP_AUTH_USER']);
-                $_SERVER['PHP_AUTH_PW'] = mysql_escape_string($_SERVER['PHP_AUTH_PW']);
+                $_SERVER['PHP_AUTH_USER'] = mysqli_escape_string($db, $_SERVER['PHP_AUTH_USER']);
+                $_SERVER['PHP_AUTH_PW'] = mysqli_escape_string($db, $_SERVER['PHP_AUTH_PW']);
         }
 
         $query = "SELECT pass FROM userlist WHERE user='".$_SERVER['PHP_AUTH_USER']."'";
-        $lst = @mysql_query($query);
+        $lst = @mysqli_query($db, $query);
 
         if (!$lst)
         {
@@ -24,14 +24,14 @@ else {
         exit();
         }
 
-        if (mysql_num_rows($lst) == 0)
+        if (mysqli_num_rows($lst) == 0)
         {
            Header ("WWW-Authenticate: Basic realm=\"Pure-FTPd WebUi Admin Page\"");
            Header ("HTTP/1.0 401 Unauthorized");
            exit();
         }
 
-        $pass =  @mysql_fetch_array($lst);
+        $pass =  @mysqli_fetch_array($lst);
         $_SERVER['PHP_AUTH_PW'] = md5($_SERVER['PHP_AUTH_PW']);
         if ($_SERVER['PHP_AUTH_PW']!= $pass['pass'])
         {

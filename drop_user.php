@@ -6,16 +6,16 @@ if (isset ($_POST['id'])) {$id = $_POST['id'];}
 $user = $_SERVER['PHP_AUTH_USER'];
 $info = '';
 $get_user_language = FALSE;
-$get_user_language = mysql_query("SELECT language FROM userlist WHERE user='$user';");
+$get_user_language = mysqli_query($db, "SELECT language FROM userlist WHERE user='$user';");
 if (!$get_user_language) {
-	if (($err = mysql_errno()) == 1054) {
+	if (($err = mysqli_errno($db)) == 1054) {
 		$info = "<p align=\"center\" class=\"table_error\">Your version of Pure-FTPd WebUI users table is not currently supported by current version, please upgrade your database to use miltilanguage support.</p>";
 	}
 	$language = "english";
 	include("lang/english.php");
 }
 else {
-	$language_row = mysql_fetch_array ($get_user_language);
+	$language_row = mysqli_fetch_array ($get_user_language);
 	$language = $language_row['language'];
 	if ($language == '') {
 		$language = "english";
@@ -51,7 +51,7 @@ echo("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
                 if (isset ($id))
                   {
                   /*Удаляем пользователя из базы*/
-                  $result = mysql_query ("DELETE FROM ftpd WHERE id='$id'");
+                  $result = mysqli_query ($db, "DELETE FROM ftpd WHERE id='$id'");
                   if ($result == 'true') {echo "<p>$du_success<p>";}
                   else {echo "<p>$du_error</p>";}
                   }

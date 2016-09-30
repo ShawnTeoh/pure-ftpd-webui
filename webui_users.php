@@ -5,16 +5,16 @@ include ("blocks/db_connect.php"); /*Подлкючаемся к базе*/
 $user = $_SERVER['PHP_AUTH_USER'];
 $info = '';
 $get_user_language = FALSE;
-$get_user_language = mysql_query("SELECT language FROM userlist WHERE user='$user';");
+$get_user_language = mysqli_query($db, "SELECT language FROM userlist WHERE user='$user';");
 if (!$get_user_language) {
-	if (($err = mysql_errno()) == 1054) {
+	if (($err = mysqli_errno($db)) == 1054) {
 		$info = "<p align=\"center\" class=\"table_error\">Your version of Pure-FTPd WebUI users table is not currently supported by current version, please upgrade your database to use miltilanguage support.</p>";
 	}
 	$language = "english";
 	include("lang/english.php");
 }
 else {
-	$language_row = mysql_fetch_array ($get_user_language);
+	$language_row = mysqli_fetch_array ($get_user_language);
 	$language = $language_row['language'];
 	if ($language == '') {
 		$language = "english";
@@ -86,7 +86,7 @@ echo("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 				if (isset ($_POST['password'])) {$pass = $_POST['password']; if ($pass == '') {unset ($pass);}}
 				if (isset ($_POST['language'])) {$language = $_POST['language']; if ($language == '') {unset ($language);}}
 				if (isset ($user) && isset($pass) && isset($language)) {
-					$result = mysql_query ("INSERT INTO userlist (user,pass,language) VALUES ('$user_add',md5('$pass'),'$language')");
+					$result = mysqli_query ($db, "INSERT INTO userlist (user,pass,language) VALUES ('$user_add',md5('$pass'),'$language')");
 					if ($result == 'true') {echo "<p><strong>$wu_add_resultok</strong></p>";}
 					else {echo "<p><strong>$wu_add_resulterror</strong></p>";}
 				}
@@ -104,13 +104,13 @@ echo("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 			else {
 				echo("<p class=\"text_title\">$wu_select</p>");
 				echo("<form action=\"edit_webui_users.php\" method=\"post\">");
-				$result = mysql_query ("SELECT user,id FROM userlist");
-				$myrow = mysql_fetch_array ($result);
+				$result = mysqli_query ($db, "SELECT user,id FROM userlist");
+				$myrow = mysqli_fetch_array ($result);
 				$id = $myrow["id"];
 					do {
 						printf ("<p><input name='id' type='radio' value='%s'><label> %s</label></p>", $myrow["id"], $myrow["user"]);
 					}
-				while ($myrow = mysql_fetch_array ($result));
+				while ($myrow = mysqli_fetch_array ($result));
                 echo("<p><input name=\"submit\" type=\"submit\" value=\"$wu_editbutton\">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                 	<input type=\"submit\" name=\"delete\" value=\"$ewu_deluserbutton\"></p></form>");
                 echo("<form name=\"to_list\" method=\"post\" action=\"$PHP_SELF\">
