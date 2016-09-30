@@ -181,7 +181,7 @@ echo("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 
 						// Если все нужные поля заполнены, добавляем пользователя в базу pureftpd
 						if (isset ($User) && isset($status) && isset($Password) && isset ($Dir) && isset ($DLBandwidth) && isset ($ULBandwidth) && isset ($ipaccess) && isset ($quotasize) && isset ($quotafiles)) {
-							$result = mysqli_query ($db, "INSERT INTO ftpd (User,status,Password,Dir,ULBandwidth,DLBandwidth,ipaccess,QuotaSize,QuotaFiles) VALUES ('$User','$status',md5('$Password'),'$Dir','$ULBandwidth','$DLBandwidth','$ipaccess','$quotasize','$quotafiles')");
+							$result = mysqli_query ($db, "INSERT INTO ftpd (User,status,Password,Dir,ULBandwidth,DLBandwidth,ipaccess,QuotaSize,QuotaFiles, comment) VALUES ('$User','$status',md5('$Password'),'$Dir','$ULBandwidth','$DLBandwidth','$ipaccess','$quotasize','$quotafiles','')");
 							if ($result == 'true') {echo "<p><strong>$um_add_presultok</strong></p>";}
 							else {echo "<p><strong>$um_add_presulterror</strong></p>";}
 						}
