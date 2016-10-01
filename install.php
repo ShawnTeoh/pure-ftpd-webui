@@ -144,7 +144,8 @@ echo("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://
 															('quota_files','0'),
 															('permitted_ip','*'),
 															('pureftpd_conf_path','/etc/pure-ftpd/pure-ftpd.conf'),
-															('pureftpd_init_script_path','/etc/init.d/pure-ftpd');";
+															('pureftpd_init_script_path','/etc/init.d/pure-ftpd'),
+															('pureftpwho_path','/usr/sbin/pure-ftpwho');";
 						$settings_table_content_create = FALSE;
 						mysqli_select_db($db_handler, $mysql_database);
 						$settings_table_content_create = mysqli_query($db_handler, $settings_table_content);
